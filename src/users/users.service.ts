@@ -9,13 +9,14 @@ import { UserInfo } from './UserInfo';
 export class UsersService {
   constructor(private emailService: EmailService){}
 
-  async createUser(name: string, email: string, password: string) {
-    await this.checkUserExists(email);
+  async createUser(createUserDto: CreateUserDto) {
+    console.log(createUserDto)
+    await this.checkUserExists(createUserDto.email);
 
     const signupVerifyToken = uuid.v1();
 
-    await this.saveUser(name, email, password, signupVerifyToken);
-    await this.sendMemberJoinEmail(email, signupVerifyToken);
+    await this.saveUser(createUserDto.name, createUserDto.email, createUserDto.password, signupVerifyToken);
+    await this.sendMemberJoinEmail(createUserDto.email, signupVerifyToken);
   }
 
   private async checkUserExists(email: string){
