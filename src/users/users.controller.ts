@@ -15,11 +15,6 @@ export class UsersController {
   create(@Body(ValidationPipe) createUserDto: CreateUserDto){
     return this.usersService.createUser(createUserDto);
   }
-  // async createUser(@Body() dto: CreateUserDto): Promise<void> {
-  //   const { name, email, password } = dto;
-  //   await this.usersService.createUser(name,email,password);
-  //   console.log('createUser : ', dto);
-  // }
 
   @Post('/email-verify')
   async verifyEmail(@Query() dto: VerifyEmailDto): Promise<string> {
