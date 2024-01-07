@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, BadRequestException, Header, Redirect, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, BadRequestException, Header, Redirect, Query, ParseIntPipe, HttpStatus, DefaultValuePipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { VerifyEmailDto } from './dto/verify-email.dto';
 import { UserLoginDto } from './dto/user-login.dto';
+import { ValidationPipe } from '../validation.pipe'
 import { UserInfo } from './UserInfo';
 
 @Controller('users')
@@ -11,11 +12,14 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
     
   @Post()
-  async createUser(@Body() dto: CreateUserDto): Promise<void> {
-    const { name, email, password } = dto;
-    await this.usersService.createUser(name,email,password);
-    console.log('createUser : ', dto);
+  create(@Body(ValidationPipe) createUserDto: CreateUserDto){
+    return this.usersService.createUser(createUserDto);
   }
+  // async createUser(@Body() dto: CreateUserDto): Promise<void> {
+  //   const { name, email, password } = dto;
+  //   await this.usersService.createUser(name,email,password);
+  //   console.log('createUser : ', dto);
+  // }
 
   @Post('/email-verify')
   async verifyEmail(@Query() dto: VerifyEmailDto): Promise<string> {
@@ -31,9 +35,24 @@ export class UsersController {
   }
 
   @Get('/:id')
-  async GetUserInfo(@Param('id') userId: string): Promise<UserInfo> {
-    
-    return await this.usersService.getUserInfo(userId);
+  findOne(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})) userId: number){
+    return this.usersService.findOne(userId);
   }
+
+  @Get()
+  findAll(
+    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ){
+    console.log(offset, limit);
+
+    return this.usersService.findAll();
+  }
+
+  // @Get('/:id')
+  // async GetUserInfo(@Param('id') userId: string): Promise<UserInfo> {
+    
+  //   return await this.usersService.getUserInfo(userId);
+  // }
 
 }
