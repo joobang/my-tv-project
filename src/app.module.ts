@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import emailConfig from './config/emailConfig';
 import { validationSchema } from './config/validationSchema';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -13,7 +14,21 @@ import { validationSchema } from './config/validationSchema';
       isGlobal: true,
       validationSchema,
     }),
-    UsersModule
+    UsersModule,
+    TypeOrmModule.forRoot({
+      type:'mysql',
+      host: process.env.DATABASE_HOST,
+      port: 3306,
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
+      database: 'mytv',
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: false,
+      migrationsRun: false,
+      migrations: [__dirname + '/**/migrations/*.js'],
+
+      migrationsTableName: 'migrations',
+    }),
   ],
   controllers: [AppController],
   providers: [ConfigService],

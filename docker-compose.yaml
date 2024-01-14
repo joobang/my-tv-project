@@ -1,0 +1,26 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-ramos
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+      TZ: Asia/Seoul
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql-init-files/:/docker-entrypoint-initdb.d
+    platform: linux/x86_64
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb-ramos
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 1234
+      TZ: Asia/Seoul
