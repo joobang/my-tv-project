@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import 'reflect-metadata';
 import { logger2 } from './middleware/logger2.middleware';
+import { AuthGuard } from './auth/guard/auth.guard';
 
 
 // import * as dotenv from 'dotenv';
@@ -18,6 +19,7 @@ import { logger2 } from './middleware/logger2.middleware';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({transform: true}))
+  //app.useGlobalGuards(new AuthGuard());
   app.use(logger2);
   await app.listen(3000);
 }

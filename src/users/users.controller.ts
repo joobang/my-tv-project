@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, BadRequestException, Header, Redirect, Query, ParseIntPipe, HttpStatus, DefaultValuePipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, BadRequestException, Header, Redirect, Query, ParseIntPipe, HttpStatus, DefaultValuePipe, UseGuards, Headers } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,10 +6,16 @@ import { VerifyEmailDto } from './dto/verify-email.dto';
 import { UserLoginDto } from './dto/user-login.dto';
 import { ValidationPipe } from '../validation.pipe'
 import { UserInfo } from './UserInfo';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { AuthService } from 'src/auth/auth.service';
+
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly authService: AuthService
+  ) {}
     
   @Post()
   create(@Body(ValidationPipe) createUserDto: CreateUserDto){
@@ -29,9 +35,10 @@ export class UsersController {
     return await this.usersService.login(email, password);
   }
 
+  @UseGuards(AuthGuard)
   @Get('/:id')
-  findOne(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})) userId: number){
-    return this.usersService.findOne(userId);
+  findOne(@Headers() headers: any, @Param('id') userId: string){
+    return this.usersService.getUserInfo(userId);
   }
 
   @Get()
