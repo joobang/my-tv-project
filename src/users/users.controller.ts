@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, BadRequestException, Header, Redirect, Query, ParseIntPipe, HttpStatus, DefaultValuePipe, UseGuards, Headers } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, BadRequestException, Header, Redirect, Query, ParseIntPipe, HttpStatus, DefaultValuePipe, UseGuards, Headers, Inject, LoggerService, Logger } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,17 +8,28 @@ import { ValidationPipe } from '../validation.pipe'
 import { UserInfo } from './UserInfo';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { AuthService } from 'src/auth/auth.service';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    @Inject(Logger) private readonly logger: LoggerService,
   ) {}
     
+  
+  private printWinstonLog(dto) { 
+
+    this.logger.error('error : ', JSON.stringify(dto)); 
+    this.logger.warn('warn: ', JSON.stringify(dto));
+    this.logger.verbose('verbose : ', JSON.stringify(dto));
+    this.logger.debug('debug: ', JSON.stringify(dto));
+  }
   @Post()
   create(@Body(ValidationPipe) createUserDto: CreateUserDto){
+    this.printWinstonLog(createUserDto);
     return this.usersService.createUser(createUserDto);
   }
 
