@@ -26,9 +26,8 @@ export class AuthService {
 
     verify(jwtString: string) {
         try {
-            console.log(jwtString);
             const payload = jwt.verify(jwtString, this.config.jwtSecret) as (jwt.JwtPayload | string) & User;
-
+            
             const { id, email } = payload;
 
             return {

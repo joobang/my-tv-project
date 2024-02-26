@@ -49,6 +49,9 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Get('/:id')
   findOne(@Headers() headers: any, @Param('id') userId: string){
+    if(+userId < 1) {
+      throw new BadRequestException('id는 0보다 큰 정수여야 합니다.');
+    }
     return this.usersService.getUserInfo(userId);
   }
 

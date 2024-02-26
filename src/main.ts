@@ -6,6 +6,7 @@ import { logger2 } from './middleware/logger2.middleware';
 import { AuthGuard } from './auth/guard/auth.guard';
 import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule, utilities as nestWinstonModuleUtilities } from 'nest-winston';
 import * as winston from 'winston';
+import { HttpExceptionFilter } from './common/filter/http-exception.filter';
 
 
 // import * as dotenv from 'dotenv';
@@ -32,7 +33,8 @@ async function bootstrap() {
       ],
     }),
   });
-  app.useGlobalPipes(new ValidationPipe({transform: true}))
+  app.useGlobalPipes(new ValidationPipe({transform: true}));
+  //sapp.useGlobalFilters(new HttpExceptionFilter());
   //app.useGlobalGuards(new AuthGuard());
   //app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   await app.listen(3000);
