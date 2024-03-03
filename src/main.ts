@@ -4,10 +4,15 @@ import { ValidationPipe } from '@nestjs/common';
 import 'reflect-metadata';
 import { logger2 } from './middleware/logger2.middleware';
 import { AuthGuard } from './auth/guard/auth.guard';
-import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule, utilities as nestWinstonModuleUtilities } from 'nest-winston';
+import {
+  WINSTON_MODULE_NEST_PROVIDER,
+  WinstonModule,
+  utilities as nestWinstonModuleUtilities,
+} from 'nest-winston';
 import * as winston from 'winston';
 import { HttpExceptionFilter } from './common/filter/http-exception.filter';
-
+import { LoggingInterceptor } from './common/interceptor/logging.interceptor';
+import { TransformInterceptor } from './common/interceptor/transform.interceptor';
 
 // import * as dotenv from 'dotenv';
 // import * as path from 'path';
@@ -20,20 +25,22 @@ import { HttpExceptionFilter } from './common/filter/http-exception.filter';
 // });
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule,{
+  const app = await NestFactory.create(AppModule, {
     logger: WinstonModule.createLogger({
       transports: [
-       new winston.transports.Console({
-        level: process.env.NODE_ENV === 'production' ? 'info' : 'silly',
-        format: winston.format.combine(
-          winston.format.timestamp(),
-          nestWinstonModuleUtilities.format.nestLike('MyApp', { prettyPrint: true}),
-        )
-       }),
+        new winston.transports.Console({
+          level: process.env.NODE_ENV === 'production' ? 'info' : 'silly',
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            nestWinstonModuleUtilities.format.nestLike('MyApp', {
+              prettyPrint: true,
+            }),
+          ),
+        }),
       ],
     }),
   });
-  app.useGlobalPipes(new ValidationPipe({transform: true}));
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   //sapp.useGlobalFilters(new HttpExceptionFilter());
   //app.useGlobalGuards(new AuthGuard());
   //app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));

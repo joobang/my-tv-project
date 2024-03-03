@@ -1,4 +1,10 @@
-import { Logger, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import {
+  Logger,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { AppController } from './app.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -10,9 +16,13 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { UsersController } from './users/users.controller';
 import { AuthModule } from './auth/auth.module';
 import authConfig from './config/authConfig';
-import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston';
+import {
+  utilities as nestWinstonModuleUtilities,
+  WinstonModule,
+} from 'nest-winston';
 import * as winston from 'winston';
 import { HttpExceptionFilter } from './common/filter/http-exception.filter';
+import { InterceptorModule } from './common/interceptor/interceptor.module';
 
 @Module({
   imports: [
@@ -24,7 +34,7 @@ import { HttpExceptionFilter } from './common/filter/http-exception.filter';
     }),
     UsersModule,
     TypeOrmModule.forRoot({
-      type:'mysql',
+      type: 'mysql',
       host: process.env.DATABASE_HOST,
       port: 3306,
       username: process.env.DATABASE_USERNAME,
@@ -38,6 +48,7 @@ import { HttpExceptionFilter } from './common/filter/http-exception.filter';
       migrationsTableName: 'migrations',
     }),
     AuthModule,
+    InterceptorModule,
   ],
   controllers: [],
   providers: [
@@ -45,13 +56,14 @@ import { HttpExceptionFilter } from './common/filter/http-exception.filter';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
-    }
+    },
   ],
 })
-export class AppModule implements NestModule{
+export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-      consumer.apply(LoggerMiddleware)
-      .exclude({path: '/users', method: RequestMethod.POST})
+    consumer
+      .apply(LoggerMiddleware)
+      .exclude({ path: '/users', method: RequestMethod.POST })
       .forRoutes(UsersController);
   }
 }
