@@ -23,6 +23,7 @@ import {
 import * as winston from 'winston';
 import { HttpExceptionFilter } from './common/filter/http-exception.filter';
 import { InterceptorModule } from './common/interceptor/interceptor.module';
+import { BatchModule } from './batch/batch.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { InterceptorModule } from './common/interceptor/interceptor.module';
     }),
     AuthModule,
     InterceptorModule,
+    BatchModule,
   ],
   controllers: [],
   providers: [
