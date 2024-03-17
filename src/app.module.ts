@@ -24,6 +24,9 @@ import * as winston from 'winston';
 import { HttpExceptionFilter } from './common/filter/http-exception.filter';
 import { InterceptorModule } from './common/interceptor/interceptor.module';
 import { BatchModule } from './batch/batch.module';
+import { HealthCheckController } from './health-check/health-check.controller';
+import { TerminusModule } from '@nestjs/terminus';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -51,8 +54,10 @@ import { BatchModule } from './batch/batch.module';
     AuthModule,
     InterceptorModule,
     BatchModule,
+    TerminusModule,
+    HttpModule,
   ],
-  controllers: [],
+  controllers: [HealthCheckController],
   providers: [
     Logger,
     {

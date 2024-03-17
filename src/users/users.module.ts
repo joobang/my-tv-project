@@ -7,12 +7,8 @@ import { UserEntity } from './entities/user.entity';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [
-    EmailModule,
-    AuthModule,
-    TypeOrmModule.forFeature([UserEntity])
-  ],
+  imports: [EmailModule, AuthModule, TypeOrmModule.forFeature([UserEntity])],
   controllers: [UsersController],
-  providers: [UsersService, Logger]
+  providers: [UsersService, Logger],
 })
 export class UsersModule {}

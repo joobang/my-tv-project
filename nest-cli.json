@@ -5,8 +5,8 @@
   "compilerOptions": {
     "assets": [
       {
-        "include": "./config/env/*.env",
-        "outDir": "./dist"
+        "include": "./config/env/.*.env",
+        "outDir": "./dist/"
       }
     ]
   }
