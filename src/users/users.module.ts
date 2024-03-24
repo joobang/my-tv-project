@@ -5,10 +5,25 @@ import { EmailModule } from 'src/email/email.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { AuthModule } from 'src/auth/auth.module';
+import { CqrsModule } from '@nestjs/cqrs';
+import { UserEventsHandler } from './event/user-events.handler';
+import { CretaeUserHandler } from './handler/users-create.handler';
+import { GetUserInfoQueryHandler } from './query/get-user-info.handler';
 
 @Module({
-  imports: [EmailModule, AuthModule, TypeOrmModule.forFeature([UserEntity])],
+  imports: [
+    EmailModule,
+    AuthModule,
+    TypeOrmModule.forFeature([UserEntity]),
+    CqrsModule,
+  ],
   controllers: [UsersController],
-  providers: [UsersService, Logger],
+  providers: [
+    UsersService,
+    Logger,
+    UserEventsHandler,
+    CretaeUserHandler,
+    GetUserInfoQueryHandler,
+  ],
 })
 export class UsersModule {}

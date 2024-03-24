@@ -182,8 +182,10 @@ export class UsersService {
       email: user.email,
     };
   }
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    const user = await this.userRepository.find();
+
+    return user;
   }
 
   findOne(id: string) {
