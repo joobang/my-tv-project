@@ -2,7 +2,7 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-유튜브, 트위치(치지직), 아프리카tv 통합 검색 및 분석 프로젝트
+Nest js로 배우는 백엔드 프로그래밍 실습 레포
 
 
 ## Installation
